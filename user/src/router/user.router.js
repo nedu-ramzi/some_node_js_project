@@ -9,7 +9,3 @@ router.get('/user:id', getUser);
 router.get('/user', getUsers);
 router.put('/user', userValidationMiddleware, updateUser);
 router.delete('/user:id', deleteUser);
-
-// router.get('/user', ((req, res) => {
-//     res.send('heyyyy')
-// }));

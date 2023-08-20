@@ -9,35 +9,40 @@ export const createUser = async (req, res) => {
         if (password !== confirmPassword) {
             throw new Error('Password Do not match');
         }
-        if (User.email) {
-            throw new Error('Email Already Registered');
+        const emailExist = await User.findOne({ email });
+
+        if (emailExist) {
+            throw new Error("Email Already Exist");
         }
+
         const hashedPassword = await argon.hash(password);
         const user = await User.create({ firstname, lastname, email, username, password: hashedPassword });
         await user.save();
 
-        const transporter = nodemailer.createTransport({
-            service: config.services.mailer.name,
-            auth: {
-                user: config.services.mailer.user,
-                pass: config.services.mailer.pass
-            }
-        });
+        // const transporter = nodemailer.createTransport({
+        //     host: config.services.mailer.host,
+        //     port: config.services.mailer.port,
+        //     secure: config.services.mailer.secure,
+        //     auth: {
+        //         user: config.services.mailer.user,
+        //         pass: config.services.mailer.pass
+        //     }
+        // });
 
-        let link = "";
-        const mailOption = {
-            from: config.services.mailer.user,
-            to: user.email,
-            subject: "Registration Successful",
-            text: `Congratulations on signing up in our website please log in with the link below
-                    <a href="${link}">Login</a>`,
-        };
-        transporter.sendMail(mailOption, (err, info));
-        if (err) {
-            console.log("Error:", err);
-        } else {
-            console.log("Email sent:", info.res);
-        }
+        // let link = "google.com/";
+        // const mailOption = {
+        //     from: config.services.mailer.user,
+        //     to: user.email,
+        //     subject: "Registration Successful",
+        //     text: `Congratulations on signing up in our website please log in with the link below
+        //             <a href="${link}">Login</a>`,
+        // };
+        // transporter.sendMail(mailOption, (err, info));
+        // if (err) {
+        //     console.log("Error:", err);
+        // } else {
+        //     console.log("Email sent:", info.res);
+        // }
 
         return res.status(201).json({
             "success": true,

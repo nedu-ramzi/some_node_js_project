@@ -13,9 +13,11 @@ export const config = {
             secret: process.env.JWT_SECRET
         },
         mailer: {
-            name: process.env.SERVICE_NAME,
+            host: process.env.MAIL_HOST,
+            port: process.env.MAIL_PORT,
             user: process.env.MAILER_USER,
-            pass: process.env.MAILER_PASS
+            pass: process.env.MAILER_PASS,
+            secure: true
         }
     }
 }
