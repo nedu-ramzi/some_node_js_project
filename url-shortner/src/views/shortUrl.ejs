@@ -1,0 +1,37 @@
+<%- include('partials/header.ejs') %>
+
+    <div class="main">
+        <!-- <h3><strong class="Codecrafters">Login</strong></h3> -->
+        <div class="form-register">
+            <form action="user/shortUrl" method="POST">
+                <label for="full">Enter Full URL</label>
+                <input type="text" id="full" name="full" required>
+                <button>Submit</button>
+            </form>
+
+
+            <table>
+                <th>
+                    <tr>
+                        <td>Full Url</td>
+                        <td> </td>
+                        <td>Short Url</td>
+                    </tr>
+
+                </th>
+                <% shortUrls.forEach(url=> {%>
+                    <tr>
+                        <td>
+                            <%= url.full %>
+                        </td>
+                        <td> </td>
+                        <td><a href="<%= url.full %>" target="_blank">
+                                <%= url.short %>
+                            </a></td>
+                    </tr>
+                    <% }); %>
+            </table>
+        </div>
+
+    </div>
+    <%- include('partials/footer.ejs') %>
