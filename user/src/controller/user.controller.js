@@ -1,7 +1,7 @@
 import { User } from "../model/User.model.js";
 import * as argon from 'argon2';
-import nodemailer from 'nodemailer';
-import { config } from "../config/main.config.js";
+// import nodemailer from 'nodemailer';
+// import { config } from "../config/main.config.js";
 
 export const createUser = async (req, res) => {
     try {
