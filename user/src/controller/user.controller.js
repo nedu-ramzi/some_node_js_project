@@ -47,7 +47,9 @@ export const createUser = async (req, res) => {
         return res.status(201).json({
             "success": true,
             "message": "User Created Successfully",
-            "User": User,
+            "data": {
+                "user": user
+            }
         });
     } catch (err) {
         return res.status(422).json({
@@ -70,7 +72,9 @@ export const getUser = async (req, res, next) => {
         return res.status(200).json({
             "success": true,
             "message": "User selected Successfully",
-            "User": user,
+            "data": {
+                "user": user
+            }
         });
     } catch (err) {
         return res.status(422).json({
@@ -89,7 +93,9 @@ export const getUsers = async (req, res) => {
         return res.status(200).json({
             "success": true,
             "message": "User selected Successfully",
-            "User": user,
+            "data": {
+                "user": user
+            }
         });
     } catch (err) {
         return res.status(400).json({
@@ -104,13 +110,15 @@ export const getUsers = async (req, res) => {
 
 export const updateUser = async (req, res) => {
     try {
-        const { firstname, lastname, email, username, password, confirmPassword } = req.body;
+        const { firstname, lastname, email, username, password } = req.body;
         const user = await User.findByIdAndUpdate(req.params.id, { firstname, lastname, email, username, password }, { new: true });
-
+        await user.save();
         return res.status(200).json({
             "success": true,
             "message": "Information Updated Successfully",
-            "User": user,
+            "data": {
+                "user": user
+            }
         });
     } catch (err) {
         return res.status(400).json({
@@ -129,7 +137,9 @@ export const deleteUser = async (req, res) => {
         return res.status(200).json({
             "success": true,
             "message": "User Deleted Successfully",
-            "User": user,
+            "data": {
+                "user": user
+            }
         });
     } catch (err) {
         return res.status(422).json({
