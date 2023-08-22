@@ -1,11 +1,22 @@
 import { Router } from 'express';
 import { userValidationMiddleware } from '../middleware/user.middleware.js';
-import { createUser, getUser, getUsers, updateUser, deleteUser } from '../controller/user.controller.js';
+import { authMiddleware } from '../middleware/auth.middleware.js';
+import { createUser, getUser, getUsers, updateUser, deleteUser, login } from '../controller/user.controller.js';
 
 export const router = Router();
 
-router.post('/user', userValidationMiddleware, createUser);
-router.get('/user:id', getUser);
-router.get('/user', getUsers);
-router.put('/user:id', userValidationMiddleware, updateUser);
-router.delete('/user:id', deleteUser);
+router.route('/user')
+    .post(userValidationMiddleware, createUser)
+    .get(getUsers)
+
+
+router.post('/user/login', login);
+
+router.get('/user/dashboard', authMiddleware, (req, res) => {
+    res.send("<p>hello user</p>");
+});
+
+router.route('/user/:id')
+    .get(getUser)
+    .put(userValidationMiddleware, updateUser)
+    .delete(deleteUser);

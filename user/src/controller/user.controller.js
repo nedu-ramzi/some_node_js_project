@@ -1,7 +1,7 @@
 import { User } from "../model/User.model.js";
 import * as argon from 'argon2';
-// import nodemailer from 'nodemailer';
-// import { config } from "../config/main.config.js";
+import { issueToken } from "../services/jwt.service.js";
+
 
 export const createUser = async (req, res) => {
     try {
@@ -18,32 +18,6 @@ export const createUser = async (req, res) => {
         const hashedPassword = await argon.hash(password);
         const user = await User.create({ firstname, lastname, email, username, password: hashedPassword });
         await user.save();
-
-        // const transporter = nodemailer.createTransport({
-        //     host: config.services.mailer.host,
-        //     port: config.services.mailer.port,
-        //     secure: config.services.mailer.secure,
-        //     auth: {
-        //         user: config.services.mailer.user,
-        //         pass: config.services.mailer.pass
-        //     }
-        // });
-
-        // let link = "google.com/";
-        // const mailOption = {
-        //     from: config.services.mailer.user,
-        //     to: user.email,
-        //     subject: "Registration Successful",
-        //     text: `Congratulations on signing up in our website please log in with the link below
-        //             <a href="${link}">Login</a>`,
-        // };
-        // transporter.sendMail(mailOption, (err, info));
-        // if (err) {
-        //     console.log("Error:", err);
-        // } else {
-        //     console.log("Email sent:", info.res);
-        // }
-
         return res.status(201).json({
             "success": true,
             "message": "User Created Successfully",
@@ -150,4 +124,42 @@ export const deleteUser = async (req, res) => {
             }
         });
     }
+}
+
+export const login = async (req, res) => {
+    try {
+        const { email, password } = req.body;
+        const user = await User.findOne({ email: email });
+        if (!user) {
+            throw new Error("Email not registered");
+        }
+        const verify_password = await argon.verify(user.password, password);
+        if (!verify_password) {
+            throw new Error("Invalid credentials, check your email or password");
+        }
+
+        const payload = {
+            id: user.id,
+            username: user.username,
+            email: user.email
+        };
+
+        const token = issueToken(payload);
+
+        return res.status(200).json({
+            "success": true,
+            "message": "User logged in successfully",
+            "authorization": {
+                "type": "bearer",
+                "token": token
+            }
+        });
+    } catch (err) {
+        return res.status(422).json({
+            "success": false,
+            "message": err.message
+        });
+    }
+
+
 }

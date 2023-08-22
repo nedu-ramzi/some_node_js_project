@@ -19,7 +19,7 @@ const UserSchema = new Schema({
     },
     username: {
         type: String,
-        required: true
+        required: true,
     },
     password: {
         type: String,
@@ -27,4 +27,3 @@ const UserSchema = new Schema({
     }
 }, { timestamps: true });
 export const User = model('User', UserSchema);
-
