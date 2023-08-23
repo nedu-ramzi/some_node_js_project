@@ -17,4 +17,6 @@ const urlSchema = new Schema({
         type: ObjectId
     },
 }, { timestamps: true });
-export const shortUrl = model('Url', urlSchema);
+
+
+export const shortUrl = model('shortUrl', urlSchema);

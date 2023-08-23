@@ -29,5 +29,5 @@ app.use('/', router);
 dbcon(config);
 
 app.listen(config.server.port, () => {
-    console.log(`Application running at port: ${config.server.port} successfully`);
+    console.log(`Application running on port: ${config.server.port}`);
 });

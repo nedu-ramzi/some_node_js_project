@@ -1,7 +1,7 @@
 import { Users } from "../model/User.model.js"
 import * as argon from "argon2";
 import { issueToken } from '../services/jwt.service.js'
-// userId, userDetails, createUser, updateUser, deleteUser, logiin
+// userId, userDetails, createUser, updateUser, deleteUser, login
 
 export const userId = async (req, res, next) => {
     try {
@@ -43,7 +43,6 @@ export const userDetails = async (req, res, next) => {
                 "message": err.message,
                 "code": err.code
             },
-            redirect: '/404'
         });
     }
 }
@@ -64,7 +63,6 @@ export const createUser = async (req, res, next) => {
             "message": "Created Successfully",
             "User": User,
         });
-        res.redirect('user/login');
 
     } catch (err) {
         return res.status(422).json({
@@ -73,7 +71,6 @@ export const createUser = async (req, res, next) => {
                 "message": err.message,
                 "code": err.code
             },
-            redirect: '/404'
         });
     }
 }
@@ -98,7 +95,6 @@ export const updateUser = async (req, res, next) => {
                 "message": err.message,
                 "code": err.code
             },
-            redirect: '/404'
         });
     }
 
@@ -135,11 +131,11 @@ export const login = async (req, res, next) => {
         if (!User) {
             throw new Error('User not found');
         }
-        if (!await argon.verify(Users.password, password)) {
+        if (!await argon.verify(User.password, password)) {
             throw new Error('Invalid credentials, check your email or password');
         }
         const payload = {
-            sub: User.id,
+            id: User.id,
             name: User.name,
             email: User.email
         };
@@ -153,13 +149,11 @@ export const login = async (req, res, next) => {
                 type: 'bearer',
                 token: token
             },
-            redirect: "user/shortUrl/"
         });
     } catch (err) {
-        return res.status(422).json({
+        return res.status(401).json({
             success: false,
             message: err.message,
-            redirect: '/404'
         });
 
     }

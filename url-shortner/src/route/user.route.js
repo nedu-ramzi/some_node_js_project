@@ -18,18 +18,22 @@ router.get('/register', (req, res, next) => {
     res.render('register', { title: "Register" });
 });
 
-router.get('/user/shortUrl', authMiddleware, async (req, res, next) => {
-    const shortUrls = await shortUrl.find();
-    res.render('shortUrl', { title: "Short Url", shortUrls });
-});
+router.get('/user', userDetails);
 
 router.post('/login', login);
 router.post('/register', userValidationMiddleware, createUser);
-router.post('/user/shortUrl', authMiddleware, createUrl);
-router.get('/user', authMiddleware, userDetails);
-router.get('/user/:id', authMiddleware, userId);
-router.delete('/user/:id', authMiddleware, deleteUser);
-router.put('/user/:id', userValidationMiddleware, authMiddleware, updateUser);
+
+router.route('/user/shortUrl')
+    .post(authMiddleware, createUrl)
+    .get(authMiddleware, async (req, res, next) => {
+        const shortUrls = await shortUrl.find();
+        res.render('shortUrl', { title: "Short Url", shortUrls });
+    });
+
+router.route('/user/:id')
+    .get(userId)
+    .delete(deleteUser)
+    .put(userValidationMiddleware, updateUser);
 
 
 
