@@ -1,15 +1,10 @@
 import { Register } from "../model/register.model.js";
-import { transporter, options } from "../services/nodemailer.service.js";
 import axios from 'axios';
 import { SERVICE_URL, JWT_SECRET, FROM_EMAIL, FROM_NAME } from "../config/main.config.js";
 import jwt from "jsonwebtoken";
 
 
-export const postWithToken = async (
-    url,
-    data,
-    options = {}
-) => {
+export const postWithToken = async (url, data, options = {}) => {
     url = SERVICE_URL + url;
 
     options.headers = options.headers || {};
@@ -20,7 +15,7 @@ export const postWithToken = async (
 const generateToken = (secret) => {
     return jwt.sign(
         {
-            id: "7326846",
+
         },
         secret
     );
@@ -40,14 +35,15 @@ export const createUser = async (req, res) => {
         const register = await Register.create({ firstname, lastname, email, organisation, country });
         await register.save();
 
-        options.to = emailExist;
         try {
             let response = await postWithToken("/v1/api/email/send", {
                 from: FROM_EMAIL,
                 name: FROM_NAME,
                 to: email,
-                subject: "Account Registered!",
-                message: "Hello",
+                user: register.firstname + " " + register.lastname,
+                subject: "Registeration Successfull",
+                message: `Pleased to inform you that your registeration to Enugu Economic Summit was successfully captured.
+    You are expected to be sitted at the venue at exactly 8:00am on 'Date'.`
             });
 
             console.log(response.data);
