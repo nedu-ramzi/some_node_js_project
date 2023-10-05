@@ -7,7 +7,7 @@ import { Request } from "express";
 export const register = async (payload: Request) => {
     const { firstname, lastname, email, password, confirmPassword, birthDate }: {[key: string]: any} = payload;
 
-        if (password !== confirmPassword) {
+    if (password !== confirmPassword) {
         throw new ApplicationError('Passwords not the same', 422);
     }
 

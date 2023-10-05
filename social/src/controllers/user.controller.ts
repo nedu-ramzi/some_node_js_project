@@ -28,7 +28,7 @@ export const getAllUsers = asyncWrapper(async (req: express.Request, res: expres
 
 export const getUserbyId = asyncWrapper(async (req: express.Request, res: express.Response) => {
     try {
-        const user = await User.findById(req.params);
+        const user = await User.findById(req.params.id);
 
         return res.status(201).json({
             success: true,
@@ -81,7 +81,7 @@ export const updateUserById = asyncWrapper(async (req: express.Request, res: exp
         if (password !== confirmPassword) {
             throw new ApplicationError('Passwords do not match', 422);
         }
-        const user = await User.findByIdAndUpdate(req.params.id, { firstname, lastname, email, password, profileImage }, { new: true });
+        const user = await User.findByIdAndUpdate(req.params.id, { firstname, lastname, birthDate, email, password, profileImage }, { new: true });
         await user.save();
 
         return res.status(200).json({
@@ -105,7 +105,7 @@ export const updateUserById = asyncWrapper(async (req: express.Request, res: exp
 
 export const deleteUserById = asyncWrapper(async (req: express.Request, res: express.Response) => {
     try {
-        const user = await User.findByIdAndDelete(req.params);
+        const user = await User.findByIdAndDelete(req.params.id);
 
         return res.status(201).json({
             suceess: true,
