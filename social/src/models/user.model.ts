@@ -22,9 +22,10 @@ const UserSchema = new Schema({
         required: true,
         select: false
     },
-    profileImage: {
-        type: String,
-    }
+    /* profileImage: {
+    //     type: String,
+    // }
+    */
 
 }, {timestamps: true});
 

@@ -4,8 +4,9 @@ import user from "./user";
 
 const router = Router();
 
-export default (): Router =>{
+export default (): Router => {
     authentication(router);
     user(router);
+
     return router;
 }

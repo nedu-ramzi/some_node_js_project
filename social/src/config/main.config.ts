@@ -32,6 +32,11 @@ export const config = {
             expiresIn : '1hr',
             secret : process.env.JWT_SECRET,
         }
+    },
+    storage:{
+        cloudinary: function(){
+            
+        }
     }
     
 };

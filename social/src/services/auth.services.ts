@@ -1,17 +1,18 @@
 import { ApplicationError } from "../helpers/errors.helper";
 import { User } from "../models/user.model";
 import argon from 'argon2';
-import { issueToken } from "services/jwt.services";
+import { issueToken } from "./jwt.services";
+import { Request } from "express";
 
-export const register = async (payload: any)=>{
-    const {firstname, lastname, email, password, confirmPassword, birthDate, profileImage} = payload;
+export const register = async (payload: Request) => {
+    const { firstname, lastname, email, password, confirmPassword, birthDate }: {[key: string]: any} = payload;
 
-    if (password !== confirmPassword) {
+        if (password !== confirmPassword) {
         throw new ApplicationError('Passwords not the same', 422);
     }
 
-    const existingEmail = await User.findOne({email});
-    if(existingEmail){
+    const existingEmail = await User.findOne({ email });
+    if (existingEmail) {
         throw new ApplicationError('A user account with this mail already exist', 422);
     }
 
@@ -23,15 +24,15 @@ export const register = async (payload: any)=>{
         email,
         password: hashPassword,
         birthDate,
-        profileImage
+        // profileImage
     });
 }
 
-export const login = async (payload: any)=>{
-    const {email, password} = payload;
+export const login = async (payload: any) => {
+    const { email, password } = payload;
 
-    const user = await User.findOne({email: email});
-    if(!user) throw new ApplicationError('User account not found', 404);
+    const user = await User.findOne({ email: email });
+    if (!user) throw new ApplicationError('User account not found', 404);
 
     const verifyPassword = argon.verify(user.password, password);
     if (!verifyPassword) throw new ApplicationError('Invalid email or password', 401);
@@ -42,7 +43,7 @@ export const login = async (payload: any)=>{
         lastname: user.lastname,
         firstname: user.firstname,
         email: user.email,
-        image: user.profileImage
+        /**image: user.profileImage*/
     };
 
     return issueToken(authUser);
