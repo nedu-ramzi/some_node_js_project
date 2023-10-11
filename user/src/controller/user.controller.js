@@ -3,6 +3,8 @@ import * as argon from 'argon2';
 import { issueToken } from "../services/jwt.service.js";
 
 
+test('This create user function is supposed to get the req of firstname, lastname, email, username, password, confirmPassword, confirm the password against initial provided and successfully save the information to the database', () => { });
+
 export const createUser = async (req, res) => {
     try {
         const { firstname, lastname, email, username, password, confirmPassword } = req.body;
@@ -35,6 +37,7 @@ export const createUser = async (req, res) => {
         });
     }
 }
+
 
 export const getUser = async (req, res, next) => {
     try {
@@ -135,7 +138,7 @@ export const login = async (req, res) => {
         }
         const verify_password = await argon.verify(user.password, password);
         if (!verify_password) {
-            throw new Error("Invalid credentials, check your email or password");
+            throw new Error("Invalid credentials... Check your email or password");
         }
 
         const payload = {
@@ -148,14 +151,14 @@ export const login = async (req, res) => {
 
         return res.status(200).json({
             "success": true,
-            "message": "User logged in successfully",
+            "message": "User logged in",
             "authorization": {
                 "type": "bearer",
                 "token": token
             }
         });
     } catch (err) {
-        return res.status(422).json({
+        return res.status(401).json({
             "success": false,
             "message": err.message
         });
