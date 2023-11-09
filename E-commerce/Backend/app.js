@@ -1,5 +1,7 @@
 import express from 'express';
 import http from 'http';
+import url from "url";
+import { join } from "path";
 import morgan from 'morgan';
 import mongoose from 'mongoose';
 import cors from 'cors';
@@ -18,11 +20,14 @@ const api = process.env.API_URL;
 
 const app = express();
 
+const __dirname = url.fileURLToPath(new url.URL('.', import.meta.url));
+
 //middleware
 app.use(express.json());
 app.use(morgan('dev'));
 app.use(cors());
 app.options('*', cors());
+app.use('public/upload', express.static(join(__dirname, 'public/upload')));
 app.use(errrorHandler);
 
 
