@@ -1,7 +1,7 @@
 import { Schema, model } from "mongoose";
 
 const userSchema = new Schema({
-    name: {
+    username: {
         type: "string",
         required: true
     },
@@ -17,11 +17,12 @@ const userSchema = new Schema({
 
     },
     profileImage: {
-        type: 'string'
+        type: "string",
+        required: true,
     },
-    otp: {
-        type: 'string',
-        default: null
+    isAdmin: {
+        type: Boolean,
+        default: false
     }
 }, { timestamps: true });
 
